@@ -2,7 +2,7 @@ package com.example.motivation.memo;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,19 +16,36 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    Fragment listFragment;
+    Fragment writeFragment;
+    Fragment importantFragment;
+    Fragment trashFragment;
+
+    MenuItem writeButton;
+    MenuItem deleteButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("List");
         setSupportActionBar(toolbar);
+
+        listFragment = new ListFragment();
+        writeFragment = new WriteFragment();
+        importantFragment = new ImportantFragment();
+        trashFragment = new TrashFragment();
+
+        getSupportFragmentManager().beginTransaction().add(R.id.maincontent_container, listFragment).commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                getSupportFragmentManager().beginTransaction().replace(R.id.maincontent_container, writeFragment).commit();
+                toolbar.setTitle("Untitled");
+                setSupportActionBar(toolbar);
             }
         });
 
@@ -56,6 +73,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        writeButton = menu.findItem(R.id.action_save);
+        deleteButton = menu.findItem(R.id.action_delete);
         return true;
     }
 
@@ -67,9 +86,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -80,18 +96,18 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_all) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.maincontent_container, listFragment).commit();
+            writeButton.setVisible(false);
+            deleteButton.setVisible(false);
+        } else if (id == R.id.nav_important) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.maincontent_container, importantFragment).commit();
+            writeButton.setVisible(false);
+            deleteButton.setVisible(true);
+        } else if (id == R.id.nav_trash) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.maincontent_container, trashFragment).commit();
+            writeButton.setVisible(false);
+            deleteButton.setVisible(true);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
