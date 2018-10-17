@@ -1,14 +1,17 @@
 package com.example.motivation.memo;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -25,12 +28,13 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private MemoDatabase dbmemo;
+    private DBHelper dbmemo;
     private SQLiteDatabase db;
 
-    EditText title;
-    EditText content;
+    EditText titleEditText;
+    EditText contentEditText;
     String date;
+    Button save;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,14 +42,7 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MemoFragment.
-     */
+
     // TODO: Rename and change types and number of parameters
     public static MemoFragment newInstance(String param1, String param2) {
         MemoFragment fragment = new MemoFragment();
@@ -62,10 +59,30 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_memo, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_memo, container, false);
+
+        final DBHelper dbHelper = new DBHelper(getContext(), "MEMO.db", null, 1);
+
+        final TextView result = (TextView) rootView.findViewById(R.id.result);
+        titleEditText = rootView.findViewById(R.id.memo_title);
+        contentEditText = rootView.findViewById(R.id.memo_content);
+        save = rootView.findViewById(R.id.memo_saveButton);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = titleEditText.getText().toString();
+                String content = contentEditText.getText().toString();
+                String date = "2018-10-17";
+                Log.d("MEMO DB",title +"//" + content + "//" + date);
+
+                dbHelper.insert(title, content, date );
+                result.setText(dbHelper.getResult());
+            }
+        });
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

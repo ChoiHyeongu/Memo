@@ -6,6 +6,7 @@
     tools:context=".MemoFragment">
 
     <EditText
+        android:id="@+id/memo_title"
         android:text="@string/Untitled"
         android:gravity="top"
         android:background="@null"
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content" />
 
     <EditText
+        android:id="@+id/memo_content"
         android:background="@null"
         android:gravity="top"
         android:layout_marginTop="40dp"
@@ -20,5 +22,18 @@
         android:layout_height="match_parent"
         android:text="Content"
         />
+
+    <Button
+        android:id="@+id/memo_saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="Save" />
+
+    <TextView
+        android:layout_marginTop="150dp"
+        android:id="@+id/result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>
