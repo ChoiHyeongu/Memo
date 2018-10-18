@@ -37,24 +37,4 @@ public class DBHelper extends SQLiteOpenHelper {
     public void delete(String item) {
 
     }
-
-    public String getResult() {
-        // 읽기가 가능하게 DB 열기
-        SQLiteDatabase db = getReadableDatabase();
-        String result = "";
-
-        // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
-        Cursor cursor = db.rawQuery("SELECT * FROM MEMO", null);
-        while (cursor.moveToNext()) {
-            result += cursor.getString(0)
-                    + " / "
-                    + cursor.getString(1)
-                    + " / "
-                    + cursor.getString(2)
-                    + "/ "
-                    + cursor.getString(3);
-        }
-
-        return result;
-    }
 }

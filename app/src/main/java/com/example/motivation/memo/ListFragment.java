@@ -1,112 +1,116 @@
 package com.example.motivation.memo;
 
-import android.content.Context;
-import android.net.Uri;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ListFragment extends Fragment implements MainActivity.onBackPressedListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    DBHelper dbHelper;
+    SQLiteDatabase db;
+    Cursor cursor;
+    ListView memoList;
+    MemoListAdapter memoListAdapter;
 
-    private OnFragmentInteractionListener mListener;
+    private static final String KEY_ID = "_id";
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_DATE = "date";
+    private static final String TABLE_NAME = "MEMO";
 
-    public ListFragment() {
-        // Required empty public constructor
-    }
+    ArrayList<HashMap<String, String>> memoArrayList;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-
-    public static ListFragment newInstance(String param1, String param2) {
-        ListFragment fragment = new ListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public ListFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list, container, false);
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+        memoList = rootView.findViewById(R.id.list_memoList);
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
+        dbHelper = new DBHelper(getContext(), "MEMO.db", null, 1);
+        db = dbHelper.getWritableDatabase();
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+        return rootView;
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
 
     @Override
     public void onBack() {
         MainActivity activity = (MainActivity) getActivity();
         activity.setOnBackPressedListener(null);
         activity.onBackPressed();
+    }
+
+    protected void showList(){
+
+        try {
+
+            SQLiteDatabase ReadDB = getActivity().openOrCreateDatabase("MEMO.db", MODE_PRIVATE, null);
+
+
+            //SELECT문을 사용하여 테이블에 있는 데이터를 가져옵니다..
+            Cursor c = ReadDB.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+
+            if (c != null) {
+
+
+                if (c.moveToFirst()) {
+                    do {
+
+                        //테이블에서 두개의 컬럼값을 가져와서
+                        String title= c.getString(c.getColumnIndex(KEY_TITLE));
+                        String date = c.getString(c.getColumnIndex(KEY_DATE));
+
+                        //HashMap에 넣
+                        HashMap<String,String> memo = new HashMap<String,String>();
+
+                        memo.put(KEY_TITLE,title);
+                        memo.put(KEY_DATE,date);
+
+                        //ArrayList에 추가합니다..
+                        memoArrayList.add(memo);
+
+                    } while (c.moveToNext());
+                }
+            }
+
+            ReadDB.close();
+
+
+            //새로운 apapter를 생성하여 데이터를 넣은 후..
+            memoListAdapter = new MemoListAdapter(
+                    this, memoArrayList, memoList,
+                    new String[]{KEY_TITLE,KEY_DATE}
+            );
+
+
+            //화면에 보여주기 위해 Listview에 연결합니다.
+            memoList.setAdapter(memoListAdapter);
+
+
+        } catch (SQLiteException se) {
+            Toast.makeText(getContext(),  se.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e("",  se.getMessage());
+        }
+
     }
 }
 
