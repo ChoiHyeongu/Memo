@@ -25,8 +25,8 @@ import android.widget.Toast;
 public class MemoFragment extends Fragment implements MainActivity.onBackPressedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String DATABASE_NAME = "MEMO.db";
+    private static final String TABLE_NAME = "MEMO";
 
     private DBHelper dbmemo;
     private SQLiteDatabase db;
@@ -35,8 +35,6 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
     EditText contentEditText;
     String date;
     Button save;
-
-    private OnFragmentInteractionListener mListener;
 
     public MemoFragment() {
         // Required empty public constructor
@@ -47,8 +45,6 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
     public static MemoFragment newInstance(String param1, String param2) {
         MemoFragment fragment = new MemoFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,7 +59,7 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
 
         View rootView = inflater.inflate(R.layout.fragment_memo, container, false);
 
-        final DBHelper dbHelper = new DBHelper(getContext(), "MEMO.db", null, 1);
+        final DBHelper dbHelper = new DBHelper(getContext());
 
         titleEditText = rootView.findViewById(R.id.memo_title);
         contentEditText = rootView.findViewById(R.id.memo_content);
@@ -72,33 +68,14 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
             @Override
             public void onClick(View v) {
                 String title = titleEditText.getText().toString();
-                String content = contentEditText.getText().toString();
                 String date = "2018-10-17";
-                Log.d("MEMO DB",title +"//" + content + "//" + date);
+                Log.d("MEMO DB",title + "//" + date);
 
-                dbHelper.insert(title, content, date );
+                dbHelper.insert(title, date);
             }
         });
 
         return rootView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     @Override

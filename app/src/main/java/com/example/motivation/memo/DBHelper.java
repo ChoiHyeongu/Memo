@@ -4,37 +4,62 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import static android.content.ContentValues.TAG;
 
 public class DBHelper extends SQLiteOpenHelper {
 
+    final static String DATABASE_NAME = "MEMO.db";
+    final static int DATABASE_VERSION = 2;
+    final static String TABLE_NAME = "MEMO";
 
-    public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public DBHelper(Context context){
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE MEMO(_id INTEGER PRIMARY KEY AUTOINCREMENT, title Text, content Text, String date);");
+        try{
+            String DROP_SQL = "drop table if exists " + TABLE_NAME;
+            db.execSQL(DROP_SQL);
+        } catch (Exception e){
+            Log.e(TAG, "Exception in DROP_SQL", e);
+        }
+
+        String CREATE_SQL = "create table " + TABLE_NAME + "("
+                + " _id integer PRIMARY KEY autoincrement, "
+                + " title text,"
+                + "date text)";
+
+        try {
+            db.execSQL(CREATE_SQL);
+        } catch (Exception e){
+            Log.e(TAG, "Exception in CREATE_SQL", e);
+        }
+
     }
 
-    // DB 업그레이드를 위해 버전이 변경될 때 호출되는 함수
+    public void insert(String title, String date) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.execSQL("INSERT INTO MEMO VALUES('" + title + "', " + date + ");");
+        db.close();
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
 
-    public void insert(String title, String content, String date) {
-        // 읽고 쓰기가 가능하게 DB 열기
-        SQLiteDatabase db = getWritableDatabase();
-        // DB에 입력한 값으로 행 추가
-        db.execSQL("INSERT INTO MEMO VALUES(null, '" + title+ "', '" + content + "', '" + date+ "');");
-    }
 
-    public void update(String title, String content) {
-
-    }
-
-    public void delete(String item) {
-
-    }
 }
+
+
+
+
