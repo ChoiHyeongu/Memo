@@ -13,20 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MemoFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MemoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MemoFragment extends Fragment implements MainActivity.onBackPressedListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String DATABASE_NAME = "MEMO.db";
-    private static final String TABLE_NAME = "MEMO";
+
+    static final String DATABASE_NAME = "MEMO.db";
+    static final String TABLE_NAME = "MEMO";
 
     private DBHelper dbmemo;
     private SQLiteDatabase db;

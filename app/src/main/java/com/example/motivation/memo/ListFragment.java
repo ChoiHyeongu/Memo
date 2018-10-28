@@ -49,29 +49,29 @@ public class ListFragment extends Fragment implements MainActivity.onBackPressed
         activity.onBackPressed();
     }
 
-//    public void showList(){
-//        try{
-//
-//            SQLiteDatabase ReadDB = getActivity().openOrCreateDatabase("MEMO.db", MODE_PRIVATE, null);
-//
-//            Cursor c = ReadDB.rawQuery("SELECT * FROM MEMO" , null);
-//
-//            if(c != null){
-//                if(c.moveToFirst()){
-//                    do{
-//                        String title = c.getString(c.getColumnIndex("title"));
-//                        String date = c.getString(c.getColumnIndex("date"));
-//
-//                        memoItemArrayList.add(new MemoItem(title, date));
-//                    } while (c.moveToNext());
-//                }
-//            }
-//            ReadDB.close();
-//
-//            memoList.setAdapter(new MemoListAdapter(getActivity(), memoItemArrayList));
-//        } catch (SQLiteException se){
-//            Toast.makeText(getActivity(), se.getMessage(), Toast.LENGTH_SHORT).show();
-//            Log.d("", se.getMessage());
-//        }
-//    }
+    public void showList(){
+        try{
+
+            SQLiteDatabase ReadDB = getActivity().openOrCreateDatabase("MEMO.db", MODE_PRIVATE, null);
+
+            Cursor c = ReadDB.rawQuery("SELECT * FROM MEMO" , null);
+
+            if(c != null){
+                if(c.moveToFirst()){
+                    do{
+                        String title = c.getString(c.getColumnIndex("title"));
+                        String date = c.getString(c.getColumnIndex("date"));
+
+                        memoItemArrayList.add(new MemoItem(title, date));
+                    } while (c.moveToNext());
+                }
+            }
+            ReadDB.close();
+
+            memoList.setAdapter(new MemoListAdapter(getActivity(), memoItemArrayList));
+        } catch (SQLiteException se){
+            Toast.makeText(getActivity(), se.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("", se.getMessage());
+        }
+    }
 }

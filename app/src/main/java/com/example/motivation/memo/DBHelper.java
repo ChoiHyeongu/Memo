@@ -43,7 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void insert(String title, String date) {
         SQLiteDatabase db = getWritableDatabase();
 
-        db.execSQL("INSERT INTO MEMO VALUES('" + title + "', " + date + ");");
+        db.execSQL("insert into " + TABLE_NAME + " VALUES(null, '"+title+"', '" + date +"');");
         db.close();
     }
 
