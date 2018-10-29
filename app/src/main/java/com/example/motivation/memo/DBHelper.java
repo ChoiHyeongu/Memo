@@ -30,6 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String CREATE_SQL = "create table " + TABLE_NAME + "("
                 + " _id integer PRIMARY KEY autoincrement, "
                 + " title text,"
+                + " content text,"
                 + "date text)";
 
         try {
@@ -40,10 +41,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insert(String title, String date) {
+    public void insert(String title, String content, String date) {
         SQLiteDatabase db = getWritableDatabase();
 
-        db.execSQL("insert into " + TABLE_NAME + " VALUES(null, '"+title+"', '" + date +"');");
+        db.execSQL("insert into " + TABLE_NAME + " VALUES(null, '" + title + "', '"+ content + "', '" + date +"');");
         db.close();
     }
 

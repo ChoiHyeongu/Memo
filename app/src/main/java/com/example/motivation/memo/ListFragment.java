@@ -22,6 +22,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class ListFragment extends Fragment implements MainActivity.onBackPressedListener {
 
+    final static String DATABASE_NAME = "MEMO.db";
+
     ArrayList<MemoItem> memoItemArrayList;
     ListView memoList;
 
@@ -38,7 +40,7 @@ public class ListFragment extends Fragment implements MainActivity.onBackPressed
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         memoList = rootView.findViewById(R.id.list_memoList);
 
-//        showList();
+        showList();
         return rootView;
     }
 
@@ -50,9 +52,12 @@ public class ListFragment extends Fragment implements MainActivity.onBackPressed
     }
 
     public void showList(){
+
+        memoItemArrayList = new ArrayList<MemoItem>();
+
         try{
 
-            SQLiteDatabase ReadDB = getActivity().openOrCreateDatabase("MEMO.db", MODE_PRIVATE, null);
+            SQLiteDatabase ReadDB = getActivity().openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
 
             Cursor c = ReadDB.rawQuery("SELECT * FROM MEMO" , null);
 

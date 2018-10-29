@@ -1,5 +1,6 @@
 package com.example.motivation.memo;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,18 +14,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MemoFragment extends Fragment implements MainActivity.onBackPressedListener {
-
-    static final String DATABASE_NAME = "MEMO.db";
-    static final String TABLE_NAME = "MEMO";
-
-    private DBHelper dbmemo;
-    private SQLiteDatabase db;
 
     EditText titleEditText;
     EditText contentEditText;
     String date;
     Button save;
+
+    long now;
+    Date nowDate;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
     public MemoFragment() {
         // Required empty public constructor
@@ -45,7 +47,7 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_memo, container, false);
 
@@ -58,10 +60,10 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
             @Override
             public void onClick(View v) {
                 String title = titleEditText.getText().toString();
-                String date = "2018-10-17";
-                Log.d("MEMO DB",title + "//" + date);
+                String content = contentEditText.getText().toString();
+                String date = getTime();
 
-                dbHelper.insert(title, date);
+                dbHelper.insert(title, content, date);
             }
         });
 
@@ -73,5 +75,11 @@ public class MemoFragment extends Fragment implements MainActivity.onBackPressed
         MainActivity activity = (MainActivity) getActivity();
         activity.setOnBackPressedListener(null);
         activity.onBackPressed();
+    }
+
+    public String getTime(){
+        now = System.currentTimeMillis();
+        nowDate = new Date(now);
+        return dateFormat.format(nowDate);
     }
 }

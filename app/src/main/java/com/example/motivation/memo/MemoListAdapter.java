@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,11 +18,9 @@ public class MemoListAdapter extends BaseAdapter {
     Context context;
     ArrayList<MemoItem>  memoItemArrayList;
 
-    public MemoListAdapter(ListFragment listFragment, ArrayList<HashMap<String,String>> personList, ListView memoList, String[] strings) {
-    }
-
     class ViewHolder{
         TextView title;
+        TextView content;
         TextView date;
     }
 
@@ -54,12 +54,14 @@ public class MemoListAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
 
             viewHolder.title = (TextView) convertView.findViewById(R.id.item_memo_title);
+            viewHolder.content = (TextView) convertView.findViewById(R.id.memo_content);
             viewHolder.date = (TextView) convertView.findViewById(R.id.item_memo_date);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        viewHolder.title.setText(memoItemArrayList.get(position).getTitle());
         viewHolder.title.setText(memoItemArrayList.get(position).getTitle());
         viewHolder.date.setText(memoItemArrayList.get(position).getDate());
 

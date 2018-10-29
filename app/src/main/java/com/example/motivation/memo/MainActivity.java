@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity
     MenuItem writeButton;
     MenuItem deleteButton;
 
+    FloatingActionButton fab;
+
     private long pressedTime = 0;
 
     @Override
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,21 +84,25 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setTitle(R.string.List);
             writeButton.setVisible(false);
             deleteButton.setVisible(false);
+            fab.show();
         } else if (id == R.id.nav_important) {
             getSupportFragmentManager().beginTransaction().replace(R.id.maincontent_container, importantFragment).addToBackStack(null).commit();
             getSupportActionBar().setTitle(R.string.Important);
             writeButton.setVisible(false);
             deleteButton.setVisible(true);
+            fab.show();
         } else if (id == R.id.nav_trash) {
             getSupportFragmentManager().beginTransaction().replace(R.id.maincontent_container, trashFragment).addToBackStack(null).commit();
             getSupportActionBar().setTitle(R.string.action_trash);
             writeButton.setVisible(false);
             deleteButton.setVisible(true);
+            fab.show();
         } else if (id == R.id.nav_write){
             getSupportFragmentManager().beginTransaction().replace(R.id.maincontent_container, memoFragment).addToBackStack(null).commit();
             getSupportActionBar().setTitle(R.string.Untitled);
             writeButton.setVisible(true);
             deleteButton.setVisible(false);
+            fab.hide();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
